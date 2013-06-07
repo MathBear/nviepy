@@ -1,14 +1,14 @@
 from distutils.core import setup
 
-setup(name='nodepy',
-      version='0.4',
+setup(name='nviepy',
+      version='0.1',
       package_dir={'nodepy': ''},
       packages=['nodepy'],
       #package_data={'' : ['examples/*.py']},
-      author=['David Ketcheson'],
-      author_email=['dketch@gmail.com'],
+      author=['Vincenzo Schiano'],
+      author_email=['vin.schianodicola@studenti.unina.it'],
       url='http://numerics.kaust.edu.sa/nodepy/',
-      description='Numerical ODE solvers in Python',
-      license='modified BSD',
+      description='Numerical VIE order conditions creator',
+      license='BSD',
       requires=['numpy','sympy'],
       )

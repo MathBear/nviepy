@@ -1,8 +1,15 @@
 Overview
 ---------
 
-NodePy (Numerical ODEs in Python) is a Python package for designing, analyzing,
-and testing numerical methods for initial value ODEs. Its development was
+NviePy (Numerical VIEs in Python) is a Python package for
+creating order conditions and order trees.
+It is inspired by NodePy, and extends his functionality in creating order trees and order conditions for VIEs.
+
+It could be extended in order to have the same, ore more, functionalities as the original package;
+i.e. designing, analyzing,  and testing numerical methods for VIEs of the second type.
+
+
+Its development was
 motivated by my own research in time integration methods for PDEs. I found that
 I was frequently repeating tasks that could be automated and integrated.
 Initially I developed a collection of MATLAB scripts, but this became unwieldy
@@ -23,24 +30,11 @@ http://github.com/ketch/nodepy
 
 Citation
 --------
-
-If you use NodePy in a published work, please cite it as follows:
-
-Ketcheson, D. I.  NodePy software version <version number>.
+Ketcheson, D. I.  NodePy software version 0.4.
 
 License
 ---------
-
-NodePy is distributed under the terms of the modified Berkeley Software
-Distribution (BSD) license. 
-
-
-Funding
----------
-
-NodePy development has been supported by:
-
-    * A U.S. Dept. of Energy Computational Science Graduate Fellowship
-    * Grants from King Abdullah University of Science & Technology
+NviePy is distributed under the same license as NodePy, in
+the terms of the modified Berkeley Software Distribution (BSD) license. 
 
 

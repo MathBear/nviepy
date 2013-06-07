@@ -1,56 +1,26 @@
-def collect_powers(s,v):
-    """
-        Collect repeated multiplications of string v in s and replace them by exponentiation.
-
-        **Examples**::
-
-            >>> collect_powers('c*c','c')
-            'c**2'
-            >>> collect_powers('c*c*c*c*c*c*c*c*c*c','c')
-            'c**10'
-            >>> collect_powers('d*c*c','c')
-            'd*c**2'
-    """
-
-    import re
-    m=s.count(v)
-    for i in range(m,0,-1):
-        pattern=re.compile(v+'(\*'+v+'){'+str(i)+'}')
-        s=pattern.sub(v+'**'+str(i+1),s)
-    return s
-
 def getint(string):
-    n = int(string[0])
-    i = 1
-    while True:
-        try:
-            n = int(string[0:i+1])
-        except:
-            return n
+    """
+    From an input string, gives in output the biggest integer starting 
+    from the beginning of the string up to the first non number character.
+    Else if the string starts from a character it turns back 1.
+    """
+    n = 1
+    i = 0
+    while i<=len(string):
+        try: n = int(string[0:i+1])
+        except ValueError: return n
+        except: print "Unexpected error!"
         i = i + 1
+    return n
 
-def collect_sums(s,v):
-    import re
-    m=s.count(v)
-    for i in range(m,1,-1):
-        pattern=re.compile('(\+'+v+'){'+str(i)+'}')
-        s=pattern.sub(str(i)+'*'+v,s)
-    return s
-
-def mysimp(s):
-    from sympy import sympify
-    s=s.replace('1*','')
-    s=s.replace('*1)',')')
-    s=s.replace('--','')
-    s=s.replace('+-','-')
-    s=collect_powers(s,'c')
-#    s=collect_sums(s,'c')
-#    return str(sympify(s))
-    return s
-
-
-def addper(s):
-    return s+'.'
+def countlett(letter,string):
+    """Find how many 'letter' are in 'string' with the power convention"""
+    r=0
+    pos=string.find(letter) # The first 'a' starting from self[0]
+    while pos!=-1:
+        r+=getint(string[pos+2:])
+        pos=string.find(letter,pos+1)
+    return r
 
 #=====================================================
 def get_substring(st,startpos):
@@ -74,7 +44,7 @@ def get_substring(st,startpos):
 def open_to_close(st,startpos):
 #=====================================================
     """ 
-        Finds end of a substring enclosed by braces starting at startpos.
+        Finds end of a substring enclosed by braces starting at 'startpos'.
         Used by get_substring.
     """
 

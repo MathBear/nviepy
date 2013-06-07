@@ -1,101 +1,92 @@
-def bisect(rlo, rhi, acc, tol, fun, params=None):
-    """ 
-        Performs a bisection search.
+def gen_partitions_ms(n):
+    """Generate all partitions of integer n (>= 0).
+    by Tim Peter's code in:
+    http://code.activestate.com/recipes/218332/
 
-        **Input**:
-            - fun -- a function such that fun(r)==True iff x_0>r, where x_0 is the value to be found.
+
+    Each partition is represented as a multiset, i.e. a dictionary
+    mapping an integer to the number of copies of that integer in
+    the partition.  For example, the partitions of 4 are {4: 1},
+    {3: 1, 1: 1}, {2: 2}, {2: 1, 1: 2}, and {1: 4}.  In general,
+    sum(k * v for k, v in a_partition.iteritems()) == n, and
+    len(a_partition) is never larger than about sqrt(2*n).
+
+    Note that the _same_ dictionary object is returned each time.
+    This is for speed:  generating each partition goes quickly,
+    taking constant time independent of n.
     """
-    while rhi-rlo>acc:
-        r=0.5*(rhi+rlo)
-        if params: isvalid=fun(r,tol,params)
-        else: isvalid=fun(r,tol)
-        if isvalid:
-            rlo=r
+
+    if n<0:
+        raise ValueError("n must be >= 0")
+
+    if n == 0:
+        yield {}
+        return
+
+    ms = {n: 1}
+    keys = [n]  # ms.keys(), from largest to smallest
+    yield ms
+
+    while keys != [1]:
+        # Reuse any 1's.
+        if keys[-1] == 1:
+            del keys[-1]
+            reuse = ms.pop(1)
         else:
-            rhi=r
-    return rlo
+            reuse = 0
 
-def permutations(str):
-    if len(str) <=1:
-        yield str
-    else:
-        for perm in permutations(str[1:]):
-            for i in range(len(perm)+1):
-                yield perm[:i] + str[0:1] + perm[i:]
+        # Let i be the smallest key larger than 1.
+        #  Reuse one instance of i.
+        i = keys[-1]
+        newcount = ms[i] = ms[i] - 1
+        reuse += i
+        if newcount == 0:
+            del keys[-1], ms[i]
 
-def shortstring(x,printzeros=False):
-    import numpy as np
-    import sympy.core.numbers
-    if x==0 and printzeros==False:
-        return ''
-    elif x.__class__ is np.float64 or x.__class__ is sympy.Float:
-        return '%6.3f' % x
-    else: 
-        return ' '+str(x)
+        # Break the remainder into pieces of size i-1.
+        i -= 1
+        q, r = divmod(reuse, i)
+        ms[i] = q
+        keys.append(i)
+        if r:
+            ms[r] = 1
+            keys.append(r)
+        yield ms
 
-def array2strings(x,printzeros=False):
-    import numpy as np
-    return np.reshape([shortstring(xi,printzeros) for xi in x.reshape(-1)],x.shape)
+def partitions_rev(n):
+    # reverse order
+    if n == 0:
+        yield []
+        return
+    for p in partitions_rev(n-1):
+        yield p + [1]
+        if p and (len(p) < 2 or p[-2] > p[-1]):
+            yield p[:-1] + [p[-1] + 1]
+            
+# test both by
+#len(list(ruleAsc(60)))
+#len(list(partitions_rev(60)))
 
-def find_plot_bounds(f,guess,N=101,zmax=1000):
-    r"""Find reasonable area to plot for stability regions.
+def ruleAsc(n):
+    """     Iterative Algorithm from Jerome Kelleher
+    http://homepages.ed.ac.uk/jkellehe/partitions.php
+    Algorithm to generate all ascending compositions.
+    This algorithm is written as a Python generator.
     
-    Tries to find an area that contains the entire stability region
-    but isn't too big.  Makes lots of assumptions.  Obviously can't
-    work for unbounded stability regions.
-
-    f should return True if f(z) is in the stability region.
-
-    N should be odd in order to catch very small stability regions.
+    Although this algorithm is very simple, it is also very efficient.
+    It is Constant Amortised Time.    
     """
-    import numpy as np
-
-    bounds = guess
-    old_bounds = []
-
-    while bounds != old_bounds:
-        old_bounds = bounds
-        y=np.linspace(bounds[2],bounds[3],N)
-
-        #Check boundaries
-        bounds = list(bounds)
-        close = False
-        while abs(bounds[0])<zmax:
-            x=np.linspace(bounds[0],bounds[1],N)
-            Z=x[0]+y*1j
-
-            left = f(Z)
-            if np.any(left):
-                bounds[0] = 1.5*bounds[0]
-                close = True
-            else:
-                if close == True:
-                    break
-                bounds[0] = bounds[0]/1.5
-                if bounds[0] > -1.e-15:
-                    return bounds
-
-        bounds[1] = -0.1*bounds[0]
-        x=np.linspace(bounds[0],bounds[1],N) + 0.*1j
-
-        close = False
-        while abs(bounds[2])<zmax:
-            y=np.linspace(bounds[2],bounds[3],N)
-            Z=x + y[0]*1j
-
-            bottom = f(Z)
-            if np.any(bottom):
-                bounds[2] = 1.5*bounds[2]
-                close = True
-            else:
-                if close == True:
-                    break
-                bounds[2] = bounds[2]/1.5
-                if bounds[2] > -1.e-15:
-                    return bounds
-
-        bounds[3] = -bounds[2]
-
-    return bounds
-
- 
+    a = [0 for i in range(n + 1)]
+    k = 1
+    a[0] = 0
+    a[1] = n
+    while k != 0:
+        x = a[k - 1] + 1
+        y = a[k] - 1
+        k -= 1
+        while x <= y:
+            a[k] = x
+            y -= x
+            k += 1
+        a[k] = x + y
+        yield a[:k + 1]

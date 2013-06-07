@@ -1,8 +1,8 @@
 """
-NodePy (Numerical ODE solvers in Python) is...
+NviePy (Numerical VIE creating order conditions and order trees generator)
 """
 
-__version__="0.4"
+__version__="0.1"
 
 import sys
 mypath= '/Users/ketch/Research/Projects/nodepy'
