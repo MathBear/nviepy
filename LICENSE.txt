@@ -1,6 +1,6 @@
 NviePy is distributed under the terms of the modified Berkeley Software Distribution
 (BSD) license, as NodePy.
-The license is in the file nodepy/LICENSE.txt and
+The license is in the file nviepy/LICENSE.txt and
 reprinted below.
 
 See http://www.opensource.org/licenses/bsd-license.php for more details.
