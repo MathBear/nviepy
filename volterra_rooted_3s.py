@@ -503,7 +503,7 @@ def elementary_weight(tree,s,arrays,method):
         The output needs to be multiplied by b^T and equated to LHS
         to obtain the order condition.
         
-        It is used by gen_order_conditions in vrk_formula
+        It is used by gen_order_conditions in vrk_methods
         
         INPUT:
             

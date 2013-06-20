@@ -83,9 +83,9 @@ if LongTable==True:
         f.write("\\multicolumn{6}{l}")
     else:
         f.write("\\multicolumn{5}{l}")
-    f.write("{\\footnotesize\\itshape Continua dalla pagina precedente} \\\\ \n")
+    f.write("{\\tablename\\ \\thetable\\ -- \\textit{Continued from previous page}} \\\\ \n")
     #     {{\\bfseries \\tablename\\ \\thetable{} -- continued from previous page}}
-    #     {\\tablename\\ \\thetable\\ -- \\textit{Continued from previous page}}
+    #     {\\footnotesize\\itshape Continued from previous page}
     f.write("\\toprule\n")
     if Order_colum==True: f.write("\\text{Order} & ")
     f.write(" \\text{VRK} & & \\text{PVRK}")
@@ -101,7 +101,7 @@ if LongTable==True:
         f.write("\\multicolumn{6}{r}")
     else:
         f.write("\\multicolumn{5}{r}")
-    f.write("{\\footnotesize\\itshape Continua nella prossima pagina} \\\\ \n")
+    f.write("{\\footnotesize\\itshape Continued on next page} \\\\ \n")
     #        {\\textit{Continued on next page}}
     f.write("\\endfoot\n")
     f.write("\\bottomrule\n")
