@@ -165,7 +165,7 @@ def gen_order_conditions(order,arraylist,RSC='y'):
 
   
 def substitute(arraylist,listsubs, executexpand=True):
-    """ Function usefoul to substitute many values in many arrays.
+    """ Function useful to substitute many values in many arrays.
     
         Substitutes all the conditions listed in 'listsubs' in all the 
         arrays contained in 'arraylist'.
@@ -204,7 +204,7 @@ def substitute(arraylist,listsubs, executexpand=True):
     
     
 def SymPowenest(arraylist):
-    """ Function usefoul to apply powdenest to a list of arrays.
+    """ Function useful to apply powdenest to a list of arrays.
     
         uses powdenest from sympy on all the elementrs of the
         arrays contained in 'arraylist'.

@@ -63,7 +63,7 @@ def partitions_rev(n):
         if p and (len(p) < 2 or p[-2] > p[-1]):
             yield p[:-1] + [p[-1] + 1]
             
-# test both by
+# tested both performance by doing
 #len(list(ruleAsc(60)))
 #len(list(partitions_rev(60)))
 

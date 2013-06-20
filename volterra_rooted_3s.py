@@ -89,7 +89,7 @@ class RootedTree(str):
     def order(self):
         """
         The order of a rooted tree, denoted $\\rho(t)$, is the number
-        of vertices in the tree.
+        of vertexes in the tree.
 
         **Examples**::
 
@@ -185,7 +185,7 @@ class RootedTree(str):
                                 is plotted
                 xwidth -- width in which this subtree must fit, in order
                           to avoid possibly overlapping with others
-                          If it is 0, the tree has been growing stright above.
+                          If it is 0, the tree has been growing straight above.
         """
         ychild=yroot+1
         nxleaves,naleaves,subtrees=self._parse_subtrees()
@@ -199,7 +199,7 @@ class RootedTree(str):
             dist=(nchildren-1)/4.
         
         CONST=1.0   # for dense trees, e.g. tree.density()/tree.order()>1000  
-                    # this number shoul be smaller then one.
+                    # this number should be smaller then one.
         if dist > 0.2: # at least dist > 0
             if xwidth==0:
                 xwidth=CONST*dist
@@ -278,7 +278,7 @@ class RootedTree(str):
 def plot_all_trees(p,subtitle=True,TypeOfTree='xa'):
 #=====================================================
     """ Plots all rooted trees of order p """
-    MaxSubplot=49 #maximum numern of trees in one figure= 48+1
+    MaxSubplot=49 #maximum number of trees in one figure= 48+1
     
     forest=list_trees(p,xa=TypeOfTree)
     nplots=len(forest)
@@ -298,7 +298,7 @@ def plot_all_trees(p,subtitle=True,TypeOfTree='xa'):
         if ith3==nplot4fig and ithfig<nfigure-1:
             pl.suptitle('Rooted Trees of Order '+str(p),fontsize='large')
             pl.tight_layout()
-            #close the prevoious figure, open a new one
+            #close the previous figure and open a new one
             ith3=0
             ithfig+=1
             fig.append(pl.figure(ithfig+1,facecolor='white'))
@@ -498,7 +498,7 @@ def right_hand_side_str(tree,style='python'):
 
 def elementary_weight(tree,s,arrays,method):
     """
-        Constructs elementary weights for a Volerra Runge-Kutta method,
+        Constructs elementary weights for a Volterra Runge-Kutta method,
         supposing the row sum condition.
         The output needs to be multiplied by b^T and equated to LHS
         to obtain the order condition.
@@ -587,7 +587,7 @@ def _elem_weight_sub3(tree,method,c,D,A,I,u):
 
 def elementary_weight_str(tree,method='BVRK',style='python'):
     """
-        Constructs elementary weights for a Volerra Runge-Kutta method
+        Constructs elementary weights for a Volterra Runge-Kutta method
         as strings, supposing the row sum condition.
         The output needs to be multiplied by b^T and equated to LHS_str
         in order to obtain the order condition.
