@@ -87,12 +87,9 @@ if LongTable==True:
     #     {{\\bfseries \\tablename\\ \\thetable{} -- continued from previous page}}
     #     {\\footnotesize\\itshape Continued from previous page}
     f.write("\\toprule\n")
-    if Order_colum==True: f.write("\\text{Order} & ")
+    if Order_colum==True: f.write("\\text{Order}\\mathbf{p} & ")
     f.write(" \\text{VRK} & & \\text{PVRK}")
     f.write(" &  & \\text{BVRK} \\\\ \n")
-    if Order_colum==True: f.write("\\mathbf{p} &  ")
-    f.write("        &  \multicolumn{2}{l}{$(e_i=1,d_{ij}=c_i)$}")
-    f.write(" & \multicolumn{2}{l}{$(e_i=d_i, d_{ij}=d_j)$} \\\\ \n")
     f.write("\\midrule\n")
     f.write("\\endhead\n")
     
