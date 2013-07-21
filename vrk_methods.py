@@ -6,19 +6,19 @@ from numpy import array, dot, size, sum
 #=====================================================
 # Functions for creating Matrix A
 #=====================================================
-
+# c for character, s for string, and d for a integer decimal value
 def _exp(M,i,j):
      if i > j:
-             return Symbol('%c_%d%d'%(M,i,j)) # c for character, s for string, and d for a integer decimal value
+             return Symbol('%c_%d%d'%(M,i,j)) 
      else:
              return 0
 
 def _imp(M,i,j):
-    return Symbol('%c_%d%d'%(M,i,j)) # c for character, s for string, and d for a integer decimal value
+    return Symbol('%c_%d%d'%(M,i,j)) 
 
 def _diagimp(M,i,j):
      if i >= j:
-             return Symbol('%c_%d%d'%(M,i,j)) # c for character, s for string, and d for a integer decimal value
+             return Symbol('%c_%d%d'%(M,i,j)) 
      else:
              return 0
 
@@ -84,14 +84,14 @@ def create_arrays(vrktype,Amatrix,stage):
     
 
         
-def gen_order_conditions(order,arraylist,RSC='y'):
+def gen_order_conditions(order,arraylist,RSC=True):
     """ Generates a list [] of order conditions of a given 'order', using 'arraylist'.
         
         INPUT:
             
         - order     -- order of the formula.
         - arraylist -- input that comes from the output of create_arrays.
-        - RSC       -- 'y' or 'n', choose whether to add to the list of 
+        - RSC       -- choose whether to add to the list of 
                         equations the Row Sum Conditions.
         
         OUTPUT: list of equations.
@@ -151,7 +151,7 @@ def gen_order_conditions(order,arraylist,RSC='y'):
             rhs =vrt.right_hand_side(tree)
             Alleq.append(Eq(dot(b.T,vrk_oc)[0,0],rhs).expand())
     
-    if RSC=='y':
+    if RSC:
         #Finally add the Row Sum Conditions: c=Au. There are s of them.
         c=arraylist[1]
         Au=sum(arraylist[2], axis=1)
@@ -225,3 +225,148 @@ def SymPowenest(arraylist):
         matrixlist+=(Matrix(newarrayelement),)
     
     return matrixlist
+
+
+    
+def subEqns(eqns,listsubs, executexpand=True):
+    """ Function usefoul to substitute many values in many arrays.
+    
+        Substitutes all the conditions listed in 'listsubs' in all the 
+        arrays contained in 'arraylist'.
+        
+        INPUT:
+            
+        - arraylist -- list containing multiple arrays.
+        - listsubs  -- dictionary containing variables in arrraylist to substitue.
+        - executexpand -- choose wether to expand the output or not (False or True);
+                        if expanded the output can be less readable, but unquely defined.
+        
+        OUTPUT: whatever array or matrix in input, gives a Matrix in output.
+
+        **Examples**:
+
+            >>> from nviepy import vrk
+            >>> arraylist=vrk.create_arrays('PVRK','explicit',2)
+            >>> b,c,A=arraylist
+            >>> vrk.substitute(arraylist,{b[0][0]:b[1][0], A[1][0]: c[0][0]})
+            ([b_2]
+            [b_2], [c_1]
+            [c_2], [  0, 0]
+            [c_1, 0])
+    """
+    
+    print size(eqns)
+    neweqns=[]
+    for eq in eqns:
+        print eq
+        try:
+            neweq=eq.subs(listsubs).expand()
+            print neweq
+            print (not neweq)
+            if not neweq:    #ater expanding neweq may become True
+                print '\n entrato'
+                print neweq.expand()
+                neweqns.append(neweq)
+        
+        except AttributeError: #AttributeError: 'bool' object has no attribute 'expand' 
+            print '\n ErrorAtribute \n|'
+            pass
+        except: 
+            print "Unexpected error!"
+    
+    print size(neweqns)
+    print size(list(set(neweqns)))
+    
+    return list(set(neweqns)) # removes possible duplicate
+    
+    
+    
+    
+    
+def gen_Sharp_order_conditions(order,arraylist):
+    """ Generates order condition using Sharp theory.
+        
+        INPUT:
+            
+        - order     -- order of the formula.
+        - arraylist -- input that comes from the output of create_arrays.
+        
+        OUTPUT: list of equations.
+
+        **Examples**:
+
+            >>> from nviepy import vrk
+            
+            
+    """
+    from sympy import eye, ones
+    
+    numarray=size(arraylist,0)
+    if numarray != 4:
+        raise ValueError('arraylist must be 4')
+    
+    if not size(arraylist[0],0)==size(arraylist[1],0)==size(arraylist[2],0):
+        raise ValueError('First dimension does not match')
+    
+    if not size(arraylist[0],1)==size(arraylist[1],1)==1:
+        raise ValueError('First two elements are not column vector')
+        
+    if not size(arraylist[2],0)==size(arraylist[2],1):
+        raise ValueError('Third element is not a square matrix')
+    
+    s=size(arraylist[0],0)
+    u = array(ones((s,1)))
+    I = array(eye(s))
+    bT= array(arraylist[0]).T
+    #b = array(arraylist[0])
+    C = array(arraylist[1])*I
+    #c = array(arraylist[1])
+    A = array(arraylist[2])
+    D = array(arraylist[3])*I
+    #d = array(arraylist[3])
+    
+    L=[bT,dot(bT,(2*C-I)),dot(bT,(2*A-I)),dot(bT,(D-I))]
+    #L=[bT,(b*(2*c-u)).T,dot(bT,(2*A-I)),(b*(d-u)).T]
+    
+    #q_20=dot((dot(A,C)-C**2/2),u)
+    #q_20=dot(A*c,u)-c**2/2
+    
+    q_20=array([[0,-C[1][1]**2/2,0,0,0]]).T# Sharp Hypotesys
+    #q_20=array([[0,-c[1]**2/2,0,0,0]]).T
+    
+    q_21=dot((dot(A,D)-C**2),u)
+    #q_21=dot(A*d,u)-c**2
+    
+    R=[dot((D-I)*(2*D-I),u), dot((D-I)*(2*C-D),u), q_20, q_21, dot(6*C**2-6*C-I,u)]
+    #R=[(d-u)*(2*d-u), (d-u)*(2*c-d), q_20, q_21, 6*c**2-6*c-u]
+    
+    Lu=dot(L,u)
+    
+    
+    Alleq=[]
+    
+    #
+    #Finally add the Row Sum Conditions: c=Au. There are s of them.
+    c=arraylist[1]
+    Au= sum(A, axis=1)
+    for i in range(0,s):
+        Alleq.append(Eq(c.T[0][i],Au[i])) #Alleq.append(Eq((c.T[0]-Au)[i]))
+        
+    
+    Alleq.append(Eq(Lu[0,0,0],1).expand())
+    for vector in Lu[1:]:
+        Alleq.append(Eq(vector[0,0],0).expand())
+    
+    
+    #Orthogoanlity
+    for row_vector in L:
+        for col_vector in R:
+            Alleq.append(Eq(dot(row_vector,col_vector)[0,0],0).expand())
+    
+    q_20=dot((dot(A,C)-C**2/2),u)
+    # Sharp Hypotesys
+    for i in range(2,s):
+        Alleq.append(Eq(q_20[i,0],0).expand())    
+    
+    
+    return Alleq
